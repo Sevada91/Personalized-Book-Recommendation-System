@@ -1,2 +1,3 @@
 # Personalized-Book-Recommendation-System
 A desktop application that offers personalized book recommendations based on user preferences
+This project is a Personalized Book Recommendation System that utilizes the Google Books API to fetch book information dynamically and stores it in a MySQL database. The backend is implemented in Python and uses a MySQL database running inside a Docker container for persistent storage. The application will be expanded to include a user-friendly GUI, allowing users to interact with the book database effortlessly. The project is designed to be modular and scalable, allowing for easy future enhancements and collaboration.
