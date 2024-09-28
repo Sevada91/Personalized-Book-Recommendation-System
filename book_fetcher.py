@@ -52,4 +52,5 @@ def print_books():
         print(f"Authors: {', '.join(details['authors'])}")
         print(f"Category: {details['category']}")
         print(f"Publish Date: {details['publish_date']}")
+        print()
 
