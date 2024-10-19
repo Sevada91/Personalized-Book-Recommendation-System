@@ -4,7 +4,17 @@ from book_fetcher import search_book
 book_title = "who moved my cheese"
 
 # Call the search_book function to fetch and insert the book
-search_book(book_title)
+result = search_book(book_title)
 
-print("Book search and insertion completed.")
+for book in result:
+    print(book)
 
+print()
+
+def book_fetcher_sort_by(list_of_books, field):
+    return sorted(list_of_books, key=lambda x: x[field])
+
+result = book_fetcher_sort_by(result, 3)
+
+for book in result:
+    print(book)

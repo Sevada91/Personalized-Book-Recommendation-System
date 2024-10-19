@@ -8,8 +8,7 @@ load_dotenv()
 # Google Books API key
 api_key = os.getenv('GOOGLE_API_KEY')
 
-# Dictionary to store books
-books_dict = {}
+books_lists = []    # new line
 
 # Search book title
 def search_book(book_title):
@@ -31,26 +30,9 @@ def search_book(book_title):
                 category = item['volumeInfo'].get('categories', ['N/A'])[0]  # Use the first category if available
                 publish_date = item['volumeInfo'].get('publishedDate', 'N/A')
 
-                # Store book details in the dictionary
-                books_dict[title] = {
-                    'authors': authors,
-                    'category': category,
-                    'publish_date': publish_date
-                }
-
-        # Print books stored in the dictionary
-        print_books()
+                books_lists.append([title, authors, category, publish_date])  # new line
 
     else:
         print(f'Error: {response.status_code}')
 
-# Function to print books stored in the dictionary
-# function can be deleted later
-def print_books():
-    for title, details in books_dict.items():
-        print(f"Title: {title}")
-        print(f"Authors: {', '.join(details['authors'])}")
-        print(f"Category: {details['category']}")
-        print(f"Publish Date: {details['publish_date']}")
-        print()
-
+    return books_lists
