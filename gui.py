@@ -166,8 +166,8 @@ def remove_user():
     # Code here: Removes the currently selected user from the user list
     pass
 
-# User-specific book table (empty functionality for now)
-user_tree = ttk.Treeview(app, columns=("Title", "Author", "Genre", "Publish Date"), show="headings", height=4)
+# User-specific book table (shorter height)
+user_tree = ttk.Treeview(app, columns=("Title", "Author", "Genre", "Publish Date"), show="headings", height=3)
 user_tree.grid(row=1, column=5, columnspan=4, padx=5, pady=5, sticky="nsew")
 
 # Defining column heading buttons for the user table with uniform width
@@ -182,6 +182,15 @@ user_genre_button.grid(row=1, column=7, padx=2, pady=5, sticky="n")
 
 user_publish_date_button = ctk.CTkButton(app, text="Publish Date", font=button_font, width=button_width, command=lambda: publish_date_clicked())
 user_publish_date_button.grid(row=1, column=8, padx=2, pady=5, sticky="n")
+
+# Book Generator button below the user table
+book_generator_button = ctk.CTkButton(app, text="Book Generator", font=("Arial", 11), width=int(window_width * 0.25), command=lambda: generate_books())
+book_generator_button.grid(row=2, column=5, columnspan=4, padx=5, pady=10)
+
+# Function to generate books (placeholder)
+def generate_books():
+    # Code here: Generates book data and updates the user book table
+    pass
 
 # Run the application
 app.mainloop()
