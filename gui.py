@@ -22,7 +22,7 @@ app.title("Personalized Book Recommendation System")
 # Configure the grid layout for adaptive resizing
 for i in range(9):  # Adjust columns to fit all elements comfortably
     app.grid_columnconfigure(i, weight=1, uniform="column")
-app.grid_rowconfigure(1, weight=1)  
+app.grid_rowconfigure(1, weight=1)
 
 # Book list variables to store search input
 book_title = tk.StringVar()
@@ -46,8 +46,8 @@ book_tree = ttk.Treeview(app, columns=("Title", "Author", "Genre", "Publish Date
 book_tree.grid(row=1, column=0, columnspan=4, padx=5, pady=5, sticky="nsew")
 
 # Defining the column heading buttons with uniform width and smaller font for reduced height
-button_font = ("Arial", 9)  
-button_width = 100  
+button_font = ("Arial", 9)
+button_width = 100
 
 title_button = ctk.CTkButton(app, text="Title", font=button_font, width=button_width, command=lambda: title_clicked())
 title_button.grid(row=1, column=0, padx=2, pady=5, sticky="n")
@@ -68,6 +68,10 @@ add_book_button.grid(row=1, column=4, padx=2, pady=5, sticky="n")
 clear_button = ctk.CTkButton(app, text="Clear", font=button_font, width=button_width, command=lambda: clear_books())
 clear_button.grid(row=1, column=4, padx=2, pady=50, sticky="n")
 
+# Export button in the top right corner
+export_button = ctk.CTkButton(app, text="Export", width=button_width, command=lambda: export_data())
+export_button.grid(row=0, column=8, padx=5, pady=5)
+
 # Function to search books based on entry input (placeholder)
 def search_books():
     # Code here: Searches for books based on title/author/genre input and displays results in the table
@@ -81,6 +85,11 @@ def add_book():
 # Function to clear all books from the table (placeholder)
 def clear_books():
     # Code here: Clears all entries in the book table
+    pass
+
+# Function to export data (placeholder)
+def export_data():
+    # Code here: Exports data to a file
     pass
 
 # Button functions (placeholders)
@@ -101,41 +110,44 @@ def publish_date_clicked():
     pass
 
 # Function to open a pop-up window for adding a new user
+add_user_window = None  # Global variable to track the window
+
 def open_add_user_window():
-    # Code here: Opens a new window to add user information such as name, age, and gender
-    add_user_window = ctk.CTkToplevel(app)
-    add_user_window.title("Add User")
-    add_user_window.geometry("300x250")
+    global add_user_window
+    if add_user_window is None or not add_user_window.winfo_exists():  # Check if window exists
+        add_user_window = ctk.CTkToplevel(app)
+        add_user_window.title("Add User")
+        add_user_window.geometry("300x250")
 
-    # Variables to store user input
-    user_name = tk.StringVar()
-    user_age = tk.StringVar()
-    user_gender = tk.StringVar()
+        # Variables to store user input
+        user_name = tk.StringVar()
+        user_age = tk.StringVar()
+        user_gender = tk.StringVar()
 
-    # Create input fields in the pop-up window
-    name_label = ctk.CTkLabel(add_user_window, text="Name:")
-    name_label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
-    name_entry = ctk.CTkEntry(add_user_window, width=150, textvariable=user_name)
-    name_entry.grid(row=0, column=1, padx=10, pady=10)
+        # Create input fields in the pop-up window
+        name_label = ctk.CTkLabel(add_user_window, text="Name:")
+        name_label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+        name_entry = ctk.CTkEntry(add_user_window, width=150, textvariable=user_name)
+        name_entry.grid(row=0, column=1, padx=10, pady=10)
 
-    age_label = ctk.CTkLabel(add_user_window, text="Age:")
-    age_label.grid(row=1, column=0, padx=10, pady=10, sticky="w")
-    age_entry = ctk.CTkEntry(add_user_window, width=150, textvariable=user_age)
-    age_entry.grid(row=1, column=1, padx=10, pady=10)
+        age_label = ctk.CTkLabel(add_user_window, text="Age:")
+        age_label.grid(row=1, column=0, padx=10, pady=10, sticky="w")
+        age_entry = ctk.CTkEntry(add_user_window, width=150, textvariable=user_age)
+        age_entry.grid(row=1, column=1, padx=10, pady=10)
 
-    gender_label = ctk.CTkLabel(add_user_window, text="Gender:")
-    gender_label.grid(row=2, column=0, padx=10, pady=10, sticky="w")
-    gender_dropdown = ctk.CTkComboBox(add_user_window, values=["Male", "Female", "Other"], variable=user_gender)
-    gender_dropdown.grid(row=2, column=1, padx=10, pady=10)
+        gender_label = ctk.CTkLabel(add_user_window, text="Gender:")
+        gender_label.grid(row=2, column=0, padx=10, pady=10, sticky="w")
+        gender_dropdown = ctk.CTkComboBox(add_user_window, values=["Male", "Female", "Other"], variable=user_gender)
+        gender_dropdown.grid(row=2, column=1, padx=10, pady=10)
 
-    # Add button to submit user data
-    submit_button = ctk.CTkButton(add_user_window, text="Add", command=lambda: add_user())
-    submit_button.grid(row=3, column=0, columnspan=2, padx=10, pady=20)
+        # Add button to submit user data
+        submit_button = ctk.CTkButton(add_user_window, text="Add", command=lambda: add_user())
+        submit_button.grid(row=3, column=0, columnspan=2, padx=10, pady=20)
 
-    # Function to handle adding the user (placeholder)
-    def add_user():
-        # Code here: Processes and stores user input, then closes the add user window
-        add_user_window.destroy()
+        # Function to handle adding the user (placeholder)
+        def add_user():
+            # Code here: Processes and stores user input, then closes the add user window
+            add_user_window.destroy()
 
 # Button to open the Add User window
 add_user_button = ctk.CTkButton(app, text="Add User", width=button_width, command=open_add_user_window)
