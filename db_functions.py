@@ -9,7 +9,7 @@ class User:
 	'''
 	def __init__(self, name):
 		#create hidden database folder if it doesn't already exist
-		if not os.path.exists(".databases")
+		if not os.path.exists(".databases"):
 			os.mkdir(".databases")
 		self.name = name
 		self.connection = sqlite3.connect(f'.databases/{name}.db')
