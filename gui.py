@@ -1,6 +1,8 @@
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
+import db_functions
+import os
 
 # Initialize the CustomTkinter App
 ctk.set_appearance_mode("dark")  # Set theme
@@ -121,24 +123,16 @@ def open_add_user_window():
 
         # Variables to store user input
         user_name = tk.StringVar()
-        user_age = tk.StringVar()
-        user_gender = tk.StringVar()
 
         # Create input fields in the pop-up window
-        name_label = ctk.CTkLabel(add_user_window, text="Name:")
+        name_label = ctk.CTkLabel(add_user_window, text="Username:")
         name_label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
         name_entry = ctk.CTkEntry(add_user_window, width=150, textvariable=user_name)
         name_entry.grid(row=0, column=1, padx=10, pady=10)
 
-        age_label = ctk.CTkLabel(add_user_window, text="Age:")
-        age_label.grid(row=1, column=0, padx=10, pady=10, sticky="w")
-        age_entry = ctk.CTkEntry(add_user_window, width=150, textvariable=user_age)
-        age_entry.grid(row=1, column=1, padx=10, pady=10)
-
-        gender_label = ctk.CTkLabel(add_user_window, text="Gender:")
-        gender_label.grid(row=2, column=0, padx=10, pady=10, sticky="w")
-        gender_dropdown = ctk.CTkComboBox(add_user_window, values=["Male", "Female", "Other"], variable=user_gender)
-        gender_dropdown.grid(row=2, column=1, padx=10, pady=10)
+        '''
+            REMOVED THE GENDER AND AGE BOXES FROM HERE
+        '''
 
         # Add button to submit user data
         submit_button = ctk.CTkButton(add_user_window, text="Add", command=lambda: add_user())
@@ -153,9 +147,36 @@ def open_add_user_window():
 add_user_button = ctk.CTkButton(app, text="Add User", width=button_width, command=open_add_user_window)
 add_user_button.grid(row=0, column=5, padx=5, pady=5)
 
+'''
+    SEVADA WORKING HERE______________________________________________________________________________
+'''
+
+# Initialize an empty set and list for storing database files
+user_database = set()
+data_base_hidden_folder = ".databases"
+
+if not os.path.isdir(data_base_hidden_folder):
+    # If the folder doesn't exist, mark it as "Empty"
+    user_database.add("Empty")
+else:
+    # If the folder exists, list all .db files and add them to the set and list
+    for databaese in os.listdir(data_base_hidden_folder):
+        if databaese.endswith(".db"):
+            user_database.add(databaese)
+    if not user_database:
+        user_database.add("Empty")
+
+
+
 # Dropdown to select different users (placeholder for functionality)
-user_dropdown = ctk.CTkComboBox(app, values=["User1", "User2"], width=150)
+user_dropdown = ctk.CTkComboBox(app, values=list(user_database), width=150)
 user_dropdown.grid(row=0, column=6, padx=5, pady=5)
+
+
+'''
+    SEVADA WORKING HERE______________________________________________________________________________
+'''
+
 
 # Remove User button (placeholder for functionality)
 remove_user_button = ctk.CTkButton(app, text="Remove User", width=button_width, command=lambda: remove_user())
