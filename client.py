@@ -111,26 +111,22 @@ def publish_date_clicked():
     # Code here: Function when Publish Date button is clicked
     pass
 
-
 # SEVADA WORKING HERE___________________________________________________________________________________________________________
 
 # Initialize an empty set and list for storing database files
 user_database = set()
 data_base_hidden_folder = ".databases"
 
-def update_database_pulldown_menu():
-    if not os.path.isdir(data_base_hidden_folder):
-        # If the folder doesn't exist, mark it as "Empty"
+if not os.path.isdir(data_base_hidden_folder):
+    # If the folder doesn't exist, mark it as "Empty"
+    user_database.add("Empty")
+else:
+    # If the folder exists, list all .db files and add them to the set and list
+    for databaese in os.listdir(data_base_hidden_folder):
+        if databaese.endswith(".db"):
+            user_database.add(databaese)
+    if not user_database:
         user_database.add("Empty")
-    else:
-        # If the folder exists, list all .db files and add them to the set and list
-        for databaese in os.listdir(data_base_hidden_folder):
-            if databaese.endswith(".db"):
-                user_database.add(databaese)
-        if not user_database:
-            user_database.add("Empty")
-
-update_database_pulldown_menu()
 
 
 # Function to open a pop-up window for adding a new user
@@ -158,41 +154,48 @@ def open_add_user_window():
         submit_button = ctk.CTkButton(add_user_window, text="Add", command=lambda: add_user(user_name))
         submit_button.grid(row=3, column=0, columnspan=2, padx=10, pady=20)
 
-
 # Button to open the Add User window
 add_user_button = ctk.CTkButton(app, text="Add User", width=button_width, command=open_add_user_window)
 add_user_button.grid(row=0, column=5, padx=5, pady=5)
 
-# Dropdown to select different users (placeholder for functionality)
-user_dropdown = ctk.CTkComboBox(app, values=list(user_database), width=150)
-user_dropdown.grid(row=0, column=6, padx=5, pady=5)
+selected_option = None
+if user_database:
+    selected_option = next(iter(user_database))
 
+# Function to trigger an action when an option is selected in a pull-down
+def on_option_selected(event):
+    global selected_option
+    selected_option = user_dropdown.get()
+    
+# Dropdown to select different users (placeholder for functionality)
+user_dropdown = ctk.CTkComboBox(app, values=list(user_database), width=150, command=on_option_selected)
+user_dropdown.grid(row=0, column=6, padx=5, pady=5)
 
 # Function to handle adding the user (placeholder)
 def add_user(user_name):
     if user_name.get():
-        user_database.remove("Empty")
+        if "Empty" in user_database:
+            user_database.remove("Empty")
         new_database = User(user_name.get())
         user_database.add(new_database.return_db())
         user_dropdown.configure(values=list(user_database))
     add_user_window.destroy()
 
-
 # Remove User button (placeholder for functionality)
 remove_user_button = ctk.CTkButton(app, text="Remove User", width=button_width, command=lambda: remove_user())
 remove_user_button.grid(row=0, column=7, padx=5, pady=5)
 
-
-
-
-# SEVADA WORKING HERE______________________________________________________________________________________________________
-
-
-
 # Function to remove the selected user from the dropdown (placeholder)
 def remove_user():
-    # Code here: Removes the currently selected user from the user list
-    pass
+    if selected_option and selected_option in user_database:
+        user_database.remove(selected_option)
+        file_path = os.path.join(".databases", selected_option)
+        os.remove(file_path)
+        if not user_database:
+            user_database.add("Empty")
+        user_dropdown.configure(values=list(user_database))
+
+# SEVADA WORKING HERE______________________________________________________________________________________________________
 
 # User-specific book table (shorter height)
 user_tree = ttk.Treeview(app, columns=("Title", "Author", "Genre", "Publish Date"), show="headings", height=3)
