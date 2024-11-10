@@ -15,6 +15,9 @@ class User:
 		self.connection = sqlite3.connect(f'.databases/{name}.db')
 		self.cursor = self.connection.cursor()	
 
+	def return_db(self):
+		return f"{self.name}.db"
+
 	#Searches books by title and returns tuple of book info
 	def search_db(self, title):
 		self.cursor.execute('''SELECT * FROM books WHERE Title = ?''', (title,))
