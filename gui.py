@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
-import db_functions
+from db_functions import *
 import os
 
 # Initialize the CustomTkinter App
@@ -111,6 +111,28 @@ def publish_date_clicked():
     # Code here: Function when Publish Date button is clicked
     pass
 
+
+# SEVADA WORKING HERE___________________________________________________________________________________________________________
+
+# Initialize an empty set and list for storing database files
+user_database = set()
+data_base_hidden_folder = ".databases"
+
+def update_database_pulldown_menu():
+    if not os.path.isdir(data_base_hidden_folder):
+        # If the folder doesn't exist, mark it as "Empty"
+        user_database.add("Empty")
+    else:
+        # If the folder exists, list all .db files and add them to the set and list
+        for databaese in os.listdir(data_base_hidden_folder):
+            if databaese.endswith(".db"):
+                user_database.add(databaese)
+        if not user_database:
+            user_database.add("Empty")
+
+update_database_pulldown_menu()
+
+
 # Function to open a pop-up window for adding a new user
 add_user_window = None  # Global variable to track the window
 
@@ -130,57 +152,42 @@ def open_add_user_window():
         name_entry = ctk.CTkEntry(add_user_window, width=150, textvariable=user_name)
         name_entry.grid(row=0, column=1, padx=10, pady=10)
 
-        '''
-            REMOVED THE GENDER AND AGE BOXES FROM HERE
-        '''
+        # REMOVED THE GENDER AND AGE BOXES FROM HERE ___________________________SEVADA
 
         # Add button to submit user data
-        submit_button = ctk.CTkButton(add_user_window, text="Add", command=lambda: add_user())
+        submit_button = ctk.CTkButton(add_user_window, text="Add", command=lambda: add_user(user_name))
         submit_button.grid(row=3, column=0, columnspan=2, padx=10, pady=20)
 
-        # Function to handle adding the user (placeholder)
-        def add_user():
-            # Code here: Processes and stores user input, then closes the add user window
-            add_user_window.destroy()
 
 # Button to open the Add User window
 add_user_button = ctk.CTkButton(app, text="Add User", width=button_width, command=open_add_user_window)
 add_user_button.grid(row=0, column=5, padx=5, pady=5)
-
-'''
-    SEVADA WORKING HERE______________________________________________________________________________
-'''
-
-# Initialize an empty set and list for storing database files
-user_database = set()
-data_base_hidden_folder = ".databases"
-
-if not os.path.isdir(data_base_hidden_folder):
-    # If the folder doesn't exist, mark it as "Empty"
-    user_database.add("Empty")
-else:
-    # If the folder exists, list all .db files and add them to the set and list
-    for databaese in os.listdir(data_base_hidden_folder):
-        if databaese.endswith(".db"):
-            user_database.add(databaese)
-    if not user_database:
-        user_database.add("Empty")
-
-
 
 # Dropdown to select different users (placeholder for functionality)
 user_dropdown = ctk.CTkComboBox(app, values=list(user_database), width=150)
 user_dropdown.grid(row=0, column=6, padx=5, pady=5)
 
 
-'''
-    SEVADA WORKING HERE______________________________________________________________________________
-'''
+# Function to handle adding the user (placeholder)
+def add_user(user_name):
+    if user_name.get():
+        user_database.remove("Empty")
+        new_database = User(user_name.get())
+        user_database.add(new_database.return_db())
+        user_dropdown.configure(values=list(user_database))
+    add_user_window.destroy()
 
 
 # Remove User button (placeholder for functionality)
 remove_user_button = ctk.CTkButton(app, text="Remove User", width=button_width, command=lambda: remove_user())
 remove_user_button.grid(row=0, column=7, padx=5, pady=5)
+
+
+
+
+# SEVADA WORKING HERE______________________________________________________________________________________________________
+
+
 
 # Function to remove the selected user from the dropdown (placeholder)
 def remove_user():
