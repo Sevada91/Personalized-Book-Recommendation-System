@@ -35,15 +35,15 @@ class User:
 
 		self.cursor.execute('''
 		CREATE TABLE IF NOT EXISTS books(
-			id INTEGER PRIMARY KEY,
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			Title TEXT,
-			Authors TEXT,
-			Category TEXT,
-			Published TEXT
+			Author TEXT,
+			Genre TEXT,
+			Publish_Date TEXT
 		)
 		''')
 		if not self.search_db(title):
-			self.cursor.execute('''INSERT INTO books (Title, Authors, Category, Published)
+			self.cursor.execute('''INSERT INTO books (Title, Author, Genre, Publish_Date)
 		                  VALUES (?, ?, ?, ?)''', (title, Authors, Category, publish_date))
 		else:
 			return False
