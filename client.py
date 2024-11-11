@@ -2,6 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
 from db_functions import *
+from functions import *
 import os
 
 # Initialize the CustomTkinter App
@@ -159,13 +160,17 @@ add_user_button = ctk.CTkButton(app, text="Add User", width=button_width, comman
 add_user_button.grid(row=0, column=5, padx=5, pady=5)
 
 selected_option = None
+selected_item = None
+
 if user_database:
     selected_option = next(iter(user_database))
 
 # Function to trigger an action when an option is selected in a pull-down
 def on_option_selected(event):
-    global selected_option
+    global selected_option, selected_item
     selected_option = user_dropdown.get()
+    fetch_and_display_user_data()
+    selected_item = None
     
 # Dropdown to select different users (placeholder for functionality)
 user_dropdown = ctk.CTkComboBox(app, values=list(user_database), width=150, command=on_option_selected)
@@ -185,8 +190,14 @@ def add_user(user_name):
 remove_user_button = ctk.CTkButton(app, text="Remove User", width=button_width, command=lambda: remove_user())
 remove_user_button.grid(row=0, column=7, padx=5, pady=5)
 
+# User-specific book table (shorter height)
+user_tree = ttk.Treeview(app, columns=("Title", "Author", "Genre", "Publish Date"), show="headings", height=3)
+user_tree.grid(row=1, column=5, columnspan=4, padx=5, pady=5, sticky="nsew")
+
+
 # Function to remove the selected user from the dropdown (placeholder)
 def remove_user():
+    global selected_item
     if selected_option and selected_option in user_database:
         user_database.remove(selected_option)
         file_path = os.path.join(".databases", selected_option)
@@ -194,12 +205,17 @@ def remove_user():
         if not user_database:
             user_database.add("Empty")
         user_dropdown.configure(values=list(user_database))
+        user_tree.delete(*user_tree.get_children())
+        selected_item = None
+        
+
+# Configuration for column widths for db print
+user_tree.column("Title", width=150, anchor="w")       
+user_tree.column("Author", width=150, anchor="w")      
+user_tree.column("Genre", width=100, anchor="w")       
+user_tree.column("Publish Date", width=100, anchor="w")
 
 # SEVADA WORKING HERE______________________________________________________________________________________________________
-
-# User-specific book table (shorter height)
-user_tree = ttk.Treeview(app, columns=("Title", "Author", "Genre", "Publish Date"), show="headings", height=3)
-user_tree.grid(row=1, column=5, columnspan=4, padx=5, pady=5, sticky="nsew")
 
 # Defining column heading buttons for the user table with uniform width
 user_title_button = ctk.CTkButton(app, text="Title", font=button_font, width=button_width, command=lambda: title_clicked())
@@ -217,6 +233,38 @@ user_publish_date_button.grid(row=1, column=8, padx=2, pady=5, sticky="n")
 # Book Generator button below the user table
 book_generator_button = ctk.CTkButton(app, text="Book Generator", font=("Arial", 11), width=int(window_width * 0.25), command=lambda: generate_books())
 book_generator_button.grid(row=2, column=5, columnspan=4, padx=5, pady=10)
+
+# SEVADA WORKING HERE______________________________________________________________________________________________________
+
+# Function to fetch and display data in user_tree
+def fetch_and_display_user_data():
+    # Clear the Treeview before loading new data
+    user_tree.delete(*user_tree.get_children())
+
+    # Connect to the selected database and fetch data
+    if selected_option and selected_option != "Empty":
+        conn = sqlite3.connect(os.path.join(data_base_hidden_folder, selected_option))
+        cursor = conn.cursor()
+        try:
+            cursor.execute("SELECT Title, Author, Genre, Publish_Date FROM books")
+            rows = cursor.fetchall()
+            for row in rows:
+                user_tree.insert("", "end", values=row)
+        except sqlite3.Error as e:
+            print(f"Error loading data: {e}")
+        finally:
+            conn.close()
+
+# Handle row selection in user_tree
+def on_user_row_selected(event):
+    selected_item = user_tree.selection()
+    if selected_item:
+        item_data = user_tree.item(selected_item)["values"]
+        print(f"Selected item: {item_data}")
+
+user_tree.bind("<<TreeviewSelect>>", on_user_row_selected)
+
+# SEVADA WORKING HERE______________________________________________________________________________________________________
 
 # Function to generate books (placeholder)
 def generate_books():
