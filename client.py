@@ -45,9 +45,14 @@ search_entry.grid(row=0, column=1, padx=5, pady=5, sticky="w")
 search_button = ctk.CTkButton(app, text="Search", width=100, command=lambda: search_books())
 search_button.grid(row=0, column=2, padx=5, pady=5)
 
-# Book Table to display books
+# Book Table (Left Side) - book_tree
 book_tree = ttk.Treeview(app, columns=("Title", "Author", "Genre", "Publish Date"), show="headings", height=4)
 book_tree.grid(row=1, column=0, columnspan=4, padx=5, pady=5, sticky="nsew")
+
+# Configure columns for book_tree to fill the space evenly
+for col in ("Title", "Author", "Genre", "Publish Date"):
+    book_tree.column(col, anchor="w", stretch=True, width=150)
+
 
 # Defining the column heading buttons with uniform width and smaller font for reduced height
 button_font = ("Arial", 9)
@@ -201,9 +206,13 @@ remove_user_button = ctk.CTkButton(
 )
 remove_user_button.grid(row=0, column=7, padx=5, pady=5)
 
-# User-specific book table (shorter height)
-user_tree = ttk.Treeview(app, columns=("Title", "Author", "Genre", "Publish Date"), show="headings", height=3)
+# User-specific book table (Right Side) - user_tree
+user_tree = ttk.Treeview(app, columns=("Title", "Author", "Genre", "Publish Date"), show="headings", height=4)
 user_tree.grid(row=1, column=5, columnspan=4, padx=5, pady=5, sticky="nsew")
+
+# Configure columns for user_tree to fill the space evenly
+for col in ("Title", "Author", "Genre", "Publish Date"):
+    user_tree.column(col, anchor="w", stretch=True, width=150)
 
 
 # Function to remove the selected user from the dropdown (placeholder)
