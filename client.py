@@ -58,16 +58,16 @@ for col in ("Title", "Author", "Genre", "Publish Date"):
 button_font = ("Arial", 9)
 button_width = 100
 
-title_button = ctk.CTkButton(app, text="Title", font=button_font, width=button_width, command=lambda: title_clicked())
+title_button = ctk.CTkButton(app, text="Title", font=button_font, width=button_width, command=lambda: title_clicked_data())
 title_button.grid(row=1, column=0, padx=2, pady=5, sticky="n")
 
-author_button = ctk.CTkButton(app, text="Author", font=button_font, width=button_width, command=lambda: author_clicked())
+author_button = ctk.CTkButton(app, text="Author", font=button_font, width=button_width, command=lambda: author_clicked_data())
 author_button.grid(row=1, column=1, padx=2, pady=5, sticky="n")
 
-genre_button = ctk.CTkButton(app, text="Genre", font=button_font, width=button_width, command=lambda: genre_clicked())
+genre_button = ctk.CTkButton(app, text="Genre", font=button_font, width=button_width, command=lambda: genre_clicked_data())
 genre_button.grid(row=1, column=2, padx=2, pady=5, sticky="n")
 
-publish_date_button = ctk.CTkButton(app, text="Publish Date", font=button_font, width=button_width, command=lambda: publish_date_clicked())
+publish_date_button = ctk.CTkButton(app, text="Publish Date", font=button_font, width=button_width, command=lambda: publish_date_clicked_data())
 publish_date_button.grid(row=1, column=3, padx=2, pady=5, sticky="n")
 
 # Add and Clear buttons placed next to the book table
@@ -101,23 +101,38 @@ def export_data():
     # Code here: Exports data to a file
     pass
 
-# Button functions (placeholders)
-def title_clicked():
+# Data-side Button functions (placeholders)
+def title_clicked_data():
     # Code here: Function when Title button is clicked
     pass
 
-def author_clicked():
+def author_clicked_data():
     # Code here: Function when Author button is clicked
     pass
 
-def genre_clicked():
+def genre_clicked_data():
     # Code here: Function when Genre button is clicked
     pass
 
-def publish_date_clicked():
+def publish_date_clicked_data():
     # Code here: Function when Publish Date button is clicked
     pass
+# User-side Button functions (placeholders)
+def title_clicked_user():
+    # Code here: Function when Title button is clicked
+    pass
 
+def author_clicked_user():
+    # Code here: Function when Author button is clicked
+    pass
+
+def genre_clicked_user():
+    # Code here: Function when Genre button is clicked
+    pass
+
+def publish_date_clicked_user():
+    # Code here: Function when Publish Date button is clicked
+    pass
 # SEVADA WORKING HERE___________________________________________________________________________________________________________
 
 # Initialize an empty set and list for storing database files
@@ -247,7 +262,6 @@ def remove_selected_item():
         confirm = messagebox.askyesno("Confirm Deletion", "Are you sure you want to remove this item?")
         if confirm:
             user_tree.delete(selected_item)  # Remove from the Treeview
-            # Additional code to remove from the underlying data (e.g., database or list) can go here
             print(f"Removed item: {selected_item}")
         else:
             print("Item removal cancelled.")
@@ -280,16 +294,16 @@ def remove_user_with_confirmation():
 # SEVADA WORKING HERE______________________________________________________________________________________________________
 
 # Defining column heading buttons for the user table with uniform width
-user_title_button = ctk.CTkButton(app, text="Title", font=button_font, width=button_width, command=lambda: title_clicked())
+user_title_button = ctk.CTkButton(app, text="Title", font=button_font, width=button_width, command=lambda: title_clicked_user())
 user_title_button.grid(row=1, column=5, padx=2, pady=5, sticky="n")
 
-user_author_button = ctk.CTkButton(app, text="Author", font=button_font, width=button_width, command=lambda: author_clicked())
+user_author_button = ctk.CTkButton(app, text="Author", font=button_font, width=button_width, command=lambda: author_clicked_user())
 user_author_button.grid(row=1, column=6, padx=2, pady=5, sticky="n")
 
-user_genre_button = ctk.CTkButton(app, text="Genre", font=button_font, width=button_width, command=lambda: genre_clicked())
+user_genre_button = ctk.CTkButton(app, text="Genre", font=button_font, width=button_width, command=lambda: genre_clicked_user())
 user_genre_button.grid(row=1, column=7, padx=2, pady=5, sticky="n")
 
-user_publish_date_button = ctk.CTkButton(app, text="Publish Date", font=button_font, width=button_width, command=lambda: publish_date_clicked())
+user_publish_date_button = ctk.CTkButton(app, text="Publish Date", font=button_font, width=button_width, command=lambda: publish_date_clicked_user())
 user_publish_date_button.grid(row=1, column=8, padx=2, pady=5, sticky="n")
 
 # Book Generator button below the user table
