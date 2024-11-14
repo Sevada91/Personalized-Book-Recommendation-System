@@ -154,6 +154,7 @@ else:
 # Function to open a pop-up window for adding a new user
 add_user_window = None  # Global variable to track the window
 
+# Function to open the Add User window
 def open_add_user_window():
     global add_user_window
     if add_user_window is None or not add_user_window.winfo_exists():  # Check if window exists
@@ -164,13 +165,19 @@ def open_add_user_window():
         # Variables to store user input
         user_name = tk.StringVar()
 
-        # Create input fields in the pop-up window
+        # Create input fields in the pop-up window with validation for max length 6
         name_label = ctk.CTkLabel(add_user_window, text="Username:")
         name_label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
-        name_entry = ctk.CTkEntry(add_user_window, width=150, textvariable=user_name)
+        
+        # Create a username entry with validation for max length 6
+        name_entry = ctk.CTkEntry(
+            add_user_window, 
+            width=150, 
+            textvariable=user_name, 
+            validate="key", 
+            validatecommand=(add_user_window.register(validate_username_length), "%P")
+        )
         name_entry.grid(row=0, column=1, padx=10, pady=10)
-
-        # REMOVED THE GENDER AND AGE BOXES FROM HERE ___________________________SEVADA
 
         # Add button to submit user data
         submit_button = ctk.CTkButton(add_user_window, text="Add", command=lambda: add_user(user_name))
@@ -178,6 +185,13 @@ def open_add_user_window():
 
         # Bind "Enter" key to trigger add_user when pressed
         add_user_window.bind("<Return>", lambda event: add_user(user_name))
+
+# Function to limit the username to 6 characters
+def validate_username_length(new_value):
+    if len(new_value) > 6:
+        return False  # prevents the user from typing more than 6 characters
+    return True  # Allow the input if the length is 6 or fewer
+
 
 # Button to open the Add User window
 add_user_button = ctk.CTkButton(app, text="Add User", width=button_width, command=open_add_user_window)
