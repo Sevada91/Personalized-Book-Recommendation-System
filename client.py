@@ -214,6 +214,49 @@ user_tree.grid(row=1, column=5, columnspan=4, padx=5, pady=5, sticky="nsew")
 for col in ("Title", "Author", "Genre", "Publish Date"):
     user_tree.column(col, anchor="w", stretch=True, width=150)
 
+# Function to toggle selection when clicking inside the Treeview
+def toggle_selection(event):
+    selected_item = event.widget.selection()
+    if selected_item:
+        event.widget.selection_remove(selected_item)  # Deselect if already selected
+    else:
+        event.widget.selection_add(event.widget.identify_row(event.y))  # Select if not selected
+
+# Function to cancel the selection when clicking anywhere else
+def cancel_selection(event):
+    # Deselects in both book_tree and user_tree
+    book_tree.selection_remove(book_tree.selection())
+    user_tree.selection_remove(user_tree.selection())
+
+# Bind the cancel selection event to the entire window (app)
+app.bind("<Button-1>", cancel_selection)
+
+# Bind toggle selection to both book_tree and user_tree (inside the tables)
+book_tree.bind("<ButtonRelease-1>", toggle_selection)
+user_tree.bind("<ButtonRelease-1>", toggle_selection)
+
+# Bind toggle selection to both book_tree and user_tree (inside the tables)
+book_tree.bind("<ButtonRelease-1>", toggle_selection)
+user_tree.bind("<ButtonRelease-1>", toggle_selection)
+
+# Function to remove the selected item from the user_tree
+def remove_selected_item():
+    selected_item = user_tree.selection()  # Get the selected item
+    if selected_item:
+        # Ask for confirmation before deleting
+        confirm = messagebox.askyesno("Confirm Deletion", "Are you sure you want to remove this item?")
+        if confirm:
+            user_tree.delete(selected_item)  # Remove from the Treeview
+            # Additional code to remove from the underlying data (e.g., database or list) can go here
+            print(f"Removed item: {selected_item}")
+        else:
+            print("Item removal cancelled.")
+    else:
+        print("No item selected to remove")
+
+# Create the "Remove" button for the user side
+remove_button = ctk.CTkButton(app, text="Remove", width=button_width, command=remove_selected_item)
+remove_button.grid(row=2, column=5, padx=5, pady=5)
 
 # Function to remove the selected user from the dropdown (placeholder)
 def remove_user():
@@ -233,12 +276,6 @@ def remove_user_with_confirmation():
     if confirm:
         remove_user()  # Call the original remove_user function
         
-
-# Configuration for column widths for db print
-user_tree.column("Title", width=150, anchor="w")       
-user_tree.column("Author", width=150, anchor="w")      
-user_tree.column("Genre", width=100, anchor="w")       
-user_tree.column("Publish Date", width=100, anchor="w")
 
 # SEVADA WORKING HERE______________________________________________________________________________________________________
 
