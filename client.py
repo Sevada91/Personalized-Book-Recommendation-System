@@ -177,7 +177,7 @@ def on_option_selected(event):
     selected_item = None
     
 # Dropdown to select different users (placeholder for functionality)
-user_dropdown = ctk.CTkComboBox(app, values=list(user_database), width=150, command=on_option_selected)
+user_dropdown = ctk.CTkComboBox(app, values=list(user_database), width=150, command=on_option_selected, state="readonly") # Not-editable
 user_dropdown.grid(row=0, column=6, padx=5, pady=5)
 
 # Function to handle adding the user (placeholder)
