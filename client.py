@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 from db_functions import *
 from functions import *
 import os
@@ -155,6 +156,9 @@ def open_add_user_window():
         submit_button = ctk.CTkButton(add_user_window, text="Add", command=lambda: add_user(user_name))
         submit_button.grid(row=3, column=0, columnspan=2, padx=10, pady=20)
 
+        # Bind "Enter" key to trigger add_user when pressed
+        add_user_window.bind("<Return>", lambda event: add_user(user_name))
+
 # Button to open the Add User window
 add_user_button = ctk.CTkButton(app, text="Add User", width=button_width, command=open_add_user_window)
 add_user_button.grid(row=0, column=5, padx=5, pady=5)
@@ -187,7 +191,14 @@ def add_user(user_name):
     add_user_window.destroy()
 
 # Remove User button (placeholder for functionality)
-remove_user_button = ctk.CTkButton(app, text="Remove User", width=button_width, command=lambda: remove_user())
+remove_user_button = ctk.CTkButton(
+    app,
+    text="Remove User",
+    width=button_width,
+    command=lambda: (
+        remove_user() if messagebox.askyesno("Confirmation", "Are you sure you want to delete this user?") else None
+    )
+)
 remove_user_button.grid(row=0, column=7, padx=5, pady=5)
 
 # User-specific book table (shorter height)
@@ -207,6 +218,11 @@ def remove_user():
         user_dropdown.configure(values=list(user_database))
         user_tree.delete(*user_tree.get_children())
         selected_item = None
+
+def remove_user_with_confirmation():
+    confirm = messagebox.askyesno("Confirmation", "Are you sure you want to delete this user?")
+    if confirm:
+        remove_user()  # Call the original remove_user function
         
 
 # Configuration for column widths for db print
