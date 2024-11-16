@@ -133,7 +133,6 @@ def genre_clicked_user():
 def publish_date_clicked_user():
     # Code here: Function when Publish Date button is clicked
     pass
-# SEVADA WORKING HERE___________________________________________________________________________________________________________
 
 # Initialize an empty set and list for storing database files
 user_database = set()
@@ -149,7 +148,6 @@ else:
             user_database.add(databaese)
     if not user_database:
         user_database.add("Empty")
-
 
 # Function to open a pop-up window for adding a new user
 add_user_window = None  # Global variable to track the window
@@ -191,7 +189,6 @@ def validate_username_length(new_value):
     if len(new_value) > 6:
         return False  # prevents the user from typing more than 6 characters
     return True  # Allow the input if the length is 6 or fewer
-
 
 # Button to open the Add User window
 add_user_button = ctk.CTkButton(app, text="Add User", width=button_width, command=open_add_user_window)
@@ -304,9 +301,6 @@ def remove_user_with_confirmation():
     if confirm:
         remove_user()  # Call the original remove_user function
         
-
-# SEVADA WORKING HERE______________________________________________________________________________________________________
-
 # Defining column heading buttons for the user table with uniform width
 user_title_button = ctk.CTkButton(app, text="Title", font=button_font, width=button_width, command=lambda: title_clicked_user())
 user_title_button.grid(row=1, column=5, padx=2, pady=5, sticky="n")
@@ -323,8 +317,6 @@ user_publish_date_button.grid(row=1, column=8, padx=2, pady=5, sticky="n")
 # Book Generator button below the user table
 book_generator_button = ctk.CTkButton(app, text="Book Generator", font=("Arial", 11), width=int(window_width * 0.25), command=lambda: generate_books())
 book_generator_button.grid(row=2, column=5, columnspan=4, padx=5, pady=10)
-
-# SEVADA WORKING HERE______________________________________________________________________________________________________
 
 # Function to fetch and display data in user_tree
 def fetch_and_display_user_data():
