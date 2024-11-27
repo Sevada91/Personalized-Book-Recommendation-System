@@ -320,9 +320,7 @@ user_genre_button.grid(row=1, column=7, padx=2, pady=5, sticky="n")
 user_publish_date_button = ctk.CTkButton(app, text="Publish Date", font=button_font, width=button_width, command=lambda: publish_date_clicked_user())
 user_publish_date_button.grid(row=1, column=8, padx=2, pady=5, sticky="n")
 
-# Book Generator button below the user table
-book_generator_button = ctk.CTkButton(app, text="Book Generator", font=("Arial", 11), width=int(window_width * 0.25), command=lambda: generate_books())
-book_generator_button.grid(row=2, column=5, columnspan=4, padx=5, pady=10)
+
 
 # SEVADA WORKING HERE______________________________________________________________________________________________________
 
@@ -356,10 +354,67 @@ user_tree.bind("<<TreeviewSelect>>", on_user_row_selected)
 
 # SEVADA WORKING HERE______________________________________________________________________________________________________
 
-# Function to generate books (placeholder)
-def generate_books():
-    # Code here: Generates book data and updates the user book table
+def recommend_new_books():
+    # Code here: Function to generate a new list of books for recommendation
     pass
+def open_book_generator_window():
+    book_generator_window = ctk.CTkToplevel(app)  # Create a new pop-up window
+    book_generator_window.title("Book Generator Table")
+    book_generator_window.geometry("600x400")  # Set the size of the pop-up window
+
+    # Table inside the pop-up window
+    generator_table = ttk.Treeview(
+        book_generator_window, 
+        columns=("Title", "Author", "Genre", "Publish Date"), 
+        show="headings", 
+        height=15
+    )
+    generator_table.pack(fill="both", expand=True, padx=10, pady=10)
+
+    # Configure columns for the generator_table
+    for col in ("Title", "Author", "Genre", "Publish Date"):
+        generator_table.column(col, anchor="w", stretch=True, width=150)
+        generator_table.heading(col, text=col)
+
+    # sample data to the table 
+    sample_data = [
+        ("Sample Title 1", "Sample Author 1", "Sample Genre 1", "2022-01-01"),
+        ("Sample Title 2", "Sample Author 2", "Sample Genre 2", "2023-05-15"),
+        ("Sample Title 3", "Sample Author 3", "Sample Genre 3", "2024-11-27"),
+    ]
+    for row in sample_data:
+        generator_table.insert("", "end", values=row)
+
+    # Add 'Add' button
+    add_button = ctk.CTkButton(
+        book_generator_window, 
+        text="Add", 
+        command=add_selected_item_to_user_table  # Placeholder for future functionality
+    )
+    add_button.place(relx=0.3, rely=0.9, anchor="center")  # Positioned relative to the window
+
+    # Add 'Recommend' button next to 'Add' button
+    recommend_button = ctk.CTkButton(
+        book_generator_window, 
+        text="Recommend", 
+        command=recommend_new_books  # Placeholder for future functionality
+    )
+    recommend_button.place(relx=0.6, rely=0.9, anchor="center")  # Positioned relative to the window
+
+# Placeholder function for adding selected item to user's table
+def add_selected_item_to_user_table():
+    # Code here: Function to add the selected item to the user's table
+    pass
+
+# Add the Book Generator button to the main window
+book_generator_button = ctk.CTkButton(
+    app, 
+    text="Book Generator", 
+    font=("Arial", 11), 
+    width=int(window_width * 0.25), 
+    command=open_book_generator_window  # Ensure this references the defined function
+)
+book_generator_button.grid(row=2, column=5, columnspan=4, padx=5, pady=10)
 
 # Run the application
 app.mainloop()
