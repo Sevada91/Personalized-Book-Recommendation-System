@@ -33,6 +33,13 @@ class User:
 		Category = info[2]
 		publish_date = info[3]
 
+		if type(Authors) == list:
+			tempStr = ''
+			for item in Authors:
+				tempStr += (item + ", ")
+				tempStr = tempStr[:-2]		
+			Authors = tempStr
+
 		self.cursor.execute('''
 		CREATE TABLE IF NOT EXISTS books(
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -64,4 +71,7 @@ class User:
 	#removes users by deleting their database file
 	def remove_user(self, name):
 		os.remove(f".databases/{name}.db")
-		
+    #get the users genres from all books	
+	def get_genres(self):
+		self.cursor.execute('SELECT Genre FROM books')
+		return self.cursor.fetchall()
