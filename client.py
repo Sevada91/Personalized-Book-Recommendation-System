@@ -4,6 +4,8 @@ from tkinter import ttk
 from tkinter import messagebox
 from db_functions import *
 from functions import *
+from book_fetcher import *
+import json
 import os
 
 # Initialize the CustomTkinter App
@@ -42,7 +44,7 @@ search_entry = ctk.CTkEntry(app, width=150, textvariable=book_title)
 search_entry.grid(row=0, column=1, padx=5, pady=5, sticky="w")
 
 # Search Button
-search_button = ctk.CTkButton(app, text="Search", width=100, command=lambda: search_books())
+search_button = ctk.CTkButton(app, text="Search", width=100, command=lambda: search_books(search_entry.get()))
 search_button.grid(row=0, column=2, padx=5, pady=5)
 
 # Book Table (Left Side) - book_tree
@@ -71,7 +73,7 @@ publish_date_button = ctk.CTkButton(app, text="Publish Date", font=button_font, 
 publish_date_button.grid(row=1, column=3, padx=2, pady=5, sticky="n")
 
 # Add and Clear buttons placed next to the book table
-add_book_button = ctk.CTkButton(app, text="Add", font=button_font, width=button_width, command=lambda: add_book())
+add_book_button = ctk.CTkButton(app, text="Add", font=button_font, width=button_width, command=lambda: add_book_info())
 add_book_button.grid(row=1, column=4, padx=2, pady=5, sticky="n")
 
 clear_button = ctk.CTkButton(app, text="Clear", font=button_font, width=button_width, command=lambda: clear_books())
@@ -81,43 +83,108 @@ clear_button.grid(row=1, column=4, padx=2, pady=50, sticky="n")
 export_button = ctk.CTkButton(app, text="Export", width=button_width, command=lambda: export_data())
 export_button.grid(row=0, column=8, padx=5, pady=5)
 
+
+BOOK_RESULT = []
+
 # Function to search books based on entry input (placeholder)
-def search_books():
-    # Code here: Searches for books based on title/author/genre input and displays results in the table
-    pass
+def search_books(title):
+    global BOOK_RESULT
+    BOOK_RESULT.clear()
+    BOOK_RESULT = search_book(title)
+    
+    if BOOK_RESULT:
+        show_result()
+
+# Function to show result of the book search
+def show_result():
+    clear_books()
+
+    for book in BOOK_RESULT:
+        book_tree.insert("", "end", values=book)
+
+def load_user_from_json(selected_option, filename=".users.json"):
+    try:
+        # Load JSON data from the file
+        with open(filename, "r") as file:
+            data = json.load(file)
+
+        # Find the dictionary with the matching name
+        user_data = next((entry for entry in data if entry.get("name") == selected_option), None)
+
+        if user_data:
+            # Recreate the User instance using from_dict
+            return User.from_dict(user_data)
+        else:
+            print(f"No user found with name: {selected_option}")
+            return None
+
+    except FileNotFoundError:
+        print(f"File {filename} not found.")
+        return None
+    except json.JSONDecodeError:
+        print(f"Error decoding JSON in file {filename}.")
+        return None
+
 
 # Function to add a book to the table (placeholder)
-def add_book():
-    # Code here: Adds a new book with title, author, genre, and publish date to the book table
-    pass
+def add_book_info():
+    global selected_option
+    new_book = selected_book_from_search()
+    if selected_option and new_book:
+        db_class = load_user_from_json(selected_option[:-3], filename=".users.json")
+        if db_class:
+            db_class.add_book(new_book)
+            # work here
+            # work here
+            # work here
+            # work here
+            # work here
+    elif not selected_option and not new_book:
+        messagebox.showerror(message="Error\nNo database and no book selected. Please select both before adding.")
+    elif not selected_option:
+        messagebox.showerror(message="Error\nNo database selected. Please select database before adding.")
+    elif not new_book:
+        messagebox.showerror(message="Error\nNo book selected. Please select book before adding.")
 
 # Function to clear all books from the table (placeholder)
 def clear_books():
-    # Code here: Clears all entries in the book table
-    pass
+    for item in book_tree.get_children():
+        book_tree.delete(item)
 
 # Function to export data (placeholder)
 def export_data():
-    # Code here: Exports data to a file
     pass
 
-# Data-side Button functions (placeholders)
+# Right-side Button functions (placeholders)
 def title_clicked_data():
-    # Code here: Function when Title button is clicked
-    pass
+    global BOOK_RESULT
+    BOOK_RESULT = book_fetcher_sort_by(BOOK_RESULT, 0)
+    show_result()
 
 def author_clicked_data():
-    # Code here: Function when Author button is clicked
-    pass
+    global BOOK_RESULT
+    BOOK_RESULT = book_fetcher_sort_by(BOOK_RESULT, 1)
+    show_result()
 
 def genre_clicked_data():
-    # Code here: Function when Genre button is clicked
-    pass
+    global BOOK_RESULT
+    BOOK_RESULT = book_fetcher_sort_by(BOOK_RESULT, 2)
+    show_result()
 
 def publish_date_clicked_data():
-    # Code here: Function when Publish Date button is clicked
-    pass
-# User-side Button functions (placeholders)
+    global BOOK_RESULT
+    BOOK_RESULT = book_fetcher_sort_by(BOOK_RESULT, 3)
+    show_result()
+
+
+def selected_book_from_search():
+    selected_item = book_tree.selection()
+    if selected_item:
+        row_values = book_tree.item(selected_item[0], 'values')
+        return list(row_values)
+
+
+# Left-side Button functions (placeholders)
 def title_clicked_user():
     # Code here: Function when Title button is clicked
     pass
@@ -211,14 +278,72 @@ def on_option_selected(event):
 user_dropdown = ctk.CTkComboBox(app, values=list(user_database), width=150, command=on_option_selected, state="readonly") # Not-editable
 user_dropdown.grid(row=0, column=6, padx=5, pady=5)
 
+
+def load_users_from_json(filename=".users.json"):
+    try:
+        with open(filename, "r") as file:
+            user_data = json.load(file)
+            return [User.from_dict(data) for data in user_data]
+    except FileNotFoundError:
+        print(f"{filename} not found. Returning an empty list.")
+        return []
+
+# Function to save User objects to a JSON file
+def save_users_to_json(users, filename=".users.json"):
+    with open(filename, "w") as file:
+        json.dump([user.to_dict() for user in users], file)
+    print(f"Users saved to {filename}")
+
+# Function to open a JSON file and remove a specific user by name
+def remove_user_from_json(name, filename=".users.json"):
+    try:
+        # Load JSON data from the file
+        with open(filename, "r") as file:
+            data = json.load(file)
+
+        # Ensure the data is a list
+        if not isinstance(data, list):
+            raise ValueError("JSON data must be a list of dictionaries.")
+
+        # Filter out the user to remove
+        original_length = len(data)
+        data = [entry for entry in data if entry.get("name") != name]
+
+        # Check if a user was removed
+        if len(data) == original_length:
+            print(f"No user found with name: {name}")
+            return False
+
+        # Save the updated data back to the file
+        with open(filename, "w") as file:
+            json.dump(data, file, indent=4)
+        print(f"User with name '{name}' removed successfully.")
+        return True
+
+    except FileNotFoundError:
+        print(f"File {filename} not found.")
+        return False
+    except json.JSONDecodeError:
+        print(f"Error decoding JSON in file {filename}.")
+        return False
+
+
+users = load_users_from_json()
+
 # Function to handle adding the user (placeholder)
 def add_user(user_name):
     if user_name.get():
         if "Empty" in user_database:
             user_database.remove("Empty")
-        new_database = User(user_name.get())
-        user_database.add(new_database.return_db())
-        user_dropdown.configure(values=list(user_database))
+
+        if user_name.get()+'.db' in user_database:
+            messagebox.showerror(message=f"Error!\nUsername {user_name.get()} already exists.")
+        else:
+            new_database = User(user_name.get().strip())
+            user_database.add(new_database.return_db())
+            user_dropdown.configure(values=list(user_database))
+            users.append(new_database)  # Add the new User to the list
+            save_users_to_json(users)  # Save the updated list to the file
     add_user_window.destroy()
 
 # Remove User button (placeholder for functionality)
@@ -287,6 +412,7 @@ remove_button.grid(row=2, column=5, padx=5, pady=5)
 def remove_user():
     global selected_item
     if selected_option and selected_option in user_database:
+        remove_user_from_json(selected_option[:-3], filename=".users.json")
         user_database.remove(selected_option)
         file_path = os.path.join(".databases", selected_option)
         os.remove(file_path)
@@ -344,7 +470,6 @@ def on_user_row_selected(event):
 
 user_tree.bind("<<TreeviewSelect>>", on_user_row_selected)
 
-# SEVADA WORKING HERE______________________________________________________________________________________________________
 
 def recommend_new_books():
     # Code here: Function to generate a new list of books for recommendation
@@ -407,6 +532,10 @@ book_generator_button = ctk.CTkButton(
     command=open_book_generator_window  # Ensure this references the defined function
 )
 book_generator_button.grid(row=2, column=5, columnspan=4, padx=5, pady=10)
+
+if selected_option:
+    user_dropdown.set(selected_option)
+    fetch_and_display_user_data()
 
 # Run the application
 app.mainloop()

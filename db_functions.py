@@ -18,6 +18,15 @@ class User:
 	def return_db(self):
 		return f"{self.name}.db"
 
+	# Serialize the User instance to a dictionary
+	def to_dict(self):
+		return {"name": self.name}
+	
+	# Recreate a User instance from a dictionary
+	@staticmethod
+	def from_dict(data):
+		return User(data["name"])
+
 	#Searches books by title and returns tuple of book info
 	def search_db(self, title):
 		self.cursor.execute('''SELECT * FROM books WHERE Title = ?''', (title,))
@@ -50,6 +59,7 @@ class User:
 		)
 		''')
 		if not self.search_db(title):
+
 			self.cursor.execute('''INSERT INTO books (Title, Author, Genre, Publish_Date)
 		                  VALUES (?, ?, ?, ?)''', (title, Authors, Category, publish_date))
 		else:

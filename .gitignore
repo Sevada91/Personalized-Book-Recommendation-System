@@ -1,8 +1,5 @@
 .env
 __pycache__/
 .DS_Store
-<<<<<<< HEAD
 .databases
-=======
-.databases
->>>>>>> tony_gui
+.users.json
