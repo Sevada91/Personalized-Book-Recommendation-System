@@ -91,11 +91,30 @@ class User:
         else:
             print(f"Book '{title}' by {authors} already exists.")
 
-    def remove_book(self, title):
-        """Removes a book from the database by title."""
-        self.cursor.execute('''DELETE FROM books WHERE Title = ?''', (title,))
-        self.connection.commit()
-        print(f"Book '{title}' removed successfully.")
+    def remove_book(self, book_info):
+        """
+        Removes a book from the database if it exists.
+        book_info: A list containing [title, author, genre, publish_date]
+        """
+        title, author, genre, publish_date = book_info
+
+        # Check if the book exists
+        self.cursor.execute('''
+        SELECT * FROM books 
+        WHERE Title = ? AND Author = ? AND Genre = ? AND Publish_Date = ?
+        ''', (title, author, genre, publish_date))
+        result = self.cursor.fetchone()
+
+        if result:
+            # If book exists, remove it
+            self.cursor.execute('''
+            DELETE FROM books 
+            WHERE Title = ? AND Author = ? AND Genre = ? AND Publish_Date = ?
+            ''', (title, author, genre, publish_date))
+            self.connection.commit()
+            print(f"Book '{title}' by {author} removed successfully.")
+        else:
+            print(f"Book '{title}' by {author} does not exist.")
 
     def save(self):
         """Commits changes and closes the connection."""
