@@ -134,11 +134,7 @@ def add_book_info():
         db_class = load_user_from_json(selected_option[:-3], filename=".users.json")
         if db_class:
             db_class.add_book(new_book)
-            # work here
-            # work here
-            # work here
-            # work here
-            # work here
+            fetch_and_display_user_data()
     elif not selected_option and not new_book:
         messagebox.showerror(message="Error\nNo database and no book selected. Please select both before adding.")
     elif not selected_option:
