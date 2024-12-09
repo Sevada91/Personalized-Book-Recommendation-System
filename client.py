@@ -388,12 +388,18 @@ user_tree.bind("<ButtonRelease-1>", toggle_selection)
 
 # Function to remove the selected item from the user_tree
 def remove_selected_item():
+    global selected_option
     selected_item = user_tree.selection()  # Get the selected item
     if selected_item:
         # Ask for confirmation before deleting
         confirm = messagebox.askyesno("Confirm Deletion", "Are you sure you want to remove this item?")
         if confirm:
+            row_data = user_tree.item(selected_item[0], "values")
+            row_list = list(row_data)
             user_tree.delete(selected_item)  # Remove from the Treeview
+            db_class = load_user_from_json(selected_option[:-3], filename=".users.json")
+            db_class.remove_book(row_list)
+
             print(f"Removed item: {selected_item}")
         else:
             print("Item removal cancelled.")
