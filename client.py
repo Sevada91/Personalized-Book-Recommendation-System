@@ -5,6 +5,7 @@ from tkinter import messagebox
 from db_functions import *
 from functions import *
 from book_fetcher import *
+from export_pdf import generate_pdf_and_open
 import json
 import os
 
@@ -149,7 +150,12 @@ def clear_books():
 
 # Function to export data (placeholder)
 def export_data():
-    pass
+    global selected_option
+    if selected_option:
+        db_class = load_user_from_json(selected_option[:-3], filename=".users.json")
+        if db_class:
+            generate_pdf_and_open(db_class.select_all_except_id(), selected_option[:-3])
+
 
 # Left-side Button functions (placeholders)
 def title_clicked_search():
