@@ -15,7 +15,7 @@ def search_book(book_title):
     query = book_title
 
     # URL to access Google Books API
-    url = f'https://www.googleapis.com/books/v1/volumes?q={query}&key={api_key}'
+    url = f'https://www.googleapis.com/books/v1/volumes?q={query}&key={api_key}&maxResults=30'
 
     # Making a GET request to the API
     response = requests.get(url)
