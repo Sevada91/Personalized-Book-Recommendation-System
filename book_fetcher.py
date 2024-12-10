@@ -26,7 +26,7 @@ def search_book(book_title):
         if data['totalItems'] > 0:
             for item in data['items']:
                 title = item['volumeInfo'].get('title', 'N/A')
-                authors = item['volumeInfo'].get('authors', ['N/A'])
+                authors = item['volumeInfo'].get('authors', ['N/A'])[0]
                 category = item['volumeInfo'].get('categories', ['N/A'])[0]  # Use the first category if available
                 publish_date = item['volumeInfo'].get('publishedDate', 'N/A')
 
