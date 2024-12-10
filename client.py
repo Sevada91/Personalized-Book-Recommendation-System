@@ -9,6 +9,7 @@ from export_pdf import generate_pdf_and_open
 from generate import *
 import json
 import os
+import random
 
 # Initialize the CustomTkinter App
 ctk.set_appearance_mode("dark")  # Set theme
@@ -487,20 +488,24 @@ def on_user_row_selected(event):
     selected_item = user_tree.selection()
     if selected_item:
         item_data = user_tree.item(selected_item)["values"]
-        print(f"Selected item: {item_data}")
 
 user_tree.bind("<<TreeviewSelect>>", on_user_row_selected)
 
 # please comple here
 def recommend_new_books():
     global selected_option
-    new_book = selected_book_from_search()
     if selected_option:
         db_class = load_user_from_json(selected_option[:-3], filename=".users.json")
         if db_class:
-            print(db_class.get_genres())
-            # please comple here
-            # please comple here
+            genres = db_class.get_genres()
+            generated_genre = generateGenre(genres)
+            book_generate_result = generateBook(generated_genre)
+
+            search_book_result = ' '.join(book_generate_result['author_name']) + ' ' +  book_generate_result['title']
+            print(search_book_result)
+
+            print(search_book(search_book_result)[0])
+
 
 def open_book_generator_window():
     book_generator_window = ctk.CTkToplevel(app)  # Create a new pop-up window
@@ -524,8 +529,6 @@ def open_book_generator_window():
     # sample data to the table 
     sample_data = [
         ("Sample Title 1", "Sample Author 1", "Sample Genre 1", "2022-01-01"),
-        ("Sample Title 2", "Sample Author 2", "Sample Genre 2", "2023-05-15"),
-        ("Sample Title 3", "Sample Author 3", "Sample Genre 3", "2024-11-27"),
     ]
     for row in sample_data:
         generator_table.insert("", "end", values=row)
