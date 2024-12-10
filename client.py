@@ -60,16 +60,16 @@ for col in ("Title", "Author", "Genre", "Publish Date"):
 button_font = ("Arial", 9)
 button_width = 100
 
-title_button = ctk.CTkButton(app, text="Title", font=button_font, width=button_width, command=lambda: title_clicked_data())
+title_button = ctk.CTkButton(app, text="Title", font=button_font, width=button_width, command=lambda: title_clicked_search())
 title_button.grid(row=1, column=0, padx=2, pady=5, sticky="n")
 
-author_button = ctk.CTkButton(app, text="Author", font=button_font, width=button_width, command=lambda: author_clicked_data())
+author_button = ctk.CTkButton(app, text="Author", font=button_font, width=button_width, command=lambda: author_clicked_search())
 author_button.grid(row=1, column=1, padx=2, pady=5, sticky="n")
 
-genre_button = ctk.CTkButton(app, text="Genre", font=button_font, width=button_width, command=lambda: genre_clicked_data())
+genre_button = ctk.CTkButton(app, text="Genre", font=button_font, width=button_width, command=lambda: genre_clicked_search())
 genre_button.grid(row=1, column=2, padx=2, pady=5, sticky="n")
 
-publish_date_button = ctk.CTkButton(app, text="Publish Date", font=button_font, width=button_width, command=lambda: publish_date_clicked_data())
+publish_date_button = ctk.CTkButton(app, text="Publish Date", font=button_font, width=button_width, command=lambda: publish_date_clicked_search())
 publish_date_button.grid(row=1, column=3, padx=2, pady=5, sticky="n")
 
 # Add and Clear buttons placed next to the book table
@@ -151,23 +151,23 @@ def clear_books():
 def export_data():
     pass
 
-# Right-side Button functions (placeholders)
-def title_clicked_data():
+# Left-side Button functions (placeholders)
+def title_clicked_search():
     global BOOK_RESULT
     BOOK_RESULT = book_fetcher_sort_by(BOOK_RESULT, 0)
     show_result()
 
-def author_clicked_data():
+def author_clicked_search():
     global BOOK_RESULT
     BOOK_RESULT = book_fetcher_sort_by(BOOK_RESULT, 1)
     show_result()
 
-def genre_clicked_data():
+def genre_clicked_search():
     global BOOK_RESULT
     BOOK_RESULT = book_fetcher_sort_by(BOOK_RESULT, 2)
     show_result()
 
-def publish_date_clicked_data():
+def publish_date_clicked_search():
     global BOOK_RESULT
     BOOK_RESULT = book_fetcher_sort_by(BOOK_RESULT, 3)
     show_result()
@@ -180,22 +180,34 @@ def selected_book_from_search():
         return list(row_values)
 
 
-# Left-side Button functions (placeholders)
+def clear_db_treeview(tree):
+    """
+    Clears all rows from the Treeview.
+    tree: The Treeview instance to clear.
+    """
+    for item in tree.get_children():
+        tree.delete(item)
+
+def sort_database(value):
+    global selected_option
+    if selected_option:
+        db_class = load_user_from_json(selected_option[:-3], filename=".users.json")
+        db_class.sort_books(value)
+        clear_db_treeview(user_tree)
+        fetch_and_display_user_data()
+
+# Right-side Button functions (placeholders)
 def title_clicked_user():
-    # Code here: Function when Title button is clicked
-    pass
+    sort_database("Title")
 
 def author_clicked_user():
-    # Code here: Function when Author button is clicked
-    pass
+    sort_database("Author")
 
 def genre_clicked_user():
-    # Code here: Function when Genre button is clicked
-    pass
+    sort_database("Genre")
 
 def publish_date_clicked_user():
-    # Code here: Function when Publish Date button is clicked
-    pass
+    sort_database("Publish_Date")
 
 # Initialize an empty set and list for storing database files
 user_database = set()
