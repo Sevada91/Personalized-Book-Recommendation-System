@@ -6,6 +6,7 @@ from db_functions import *
 from functions import *
 from book_fetcher import *
 from export_pdf import generate_pdf_and_open
+from generate import *
 import json
 import os
 
@@ -490,10 +491,17 @@ def on_user_row_selected(event):
 
 user_tree.bind("<<TreeviewSelect>>", on_user_row_selected)
 
-
+# please comple here
 def recommend_new_books():
-    # Code here: Function to generate a new list of books for recommendation
-    pass
+    global selected_option
+    new_book = selected_book_from_search()
+    if selected_option:
+        db_class = load_user_from_json(selected_option[:-3], filename=".users.json")
+        if db_class:
+            print(db_class.get_genres())
+            # please comple here
+            # please comple here
+
 def open_book_generator_window():
     book_generator_window = ctk.CTkToplevel(app)  # Create a new pop-up window
     book_generator_window.title("Book Generator Table")
