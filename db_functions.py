@@ -140,3 +140,36 @@ class User:
         """Returns all genres from the books table."""
         self.cursor.execute('SELECT Genre FROM books')
         return self.cursor.fetchall()
+    
+    def sort_books(self, value):
+        """
+        Orders the books in the database by the specified column in ascending order.
+        value: The column name to sort by (e.g., 'Title', 'Author', 'Genre', 'Publish_Date').
+        """
+        valid_columns = {"Title", "Author", "Genre", "Publish_Date"}
+        if value not in valid_columns:
+            raise ValueError(f"Invalid column '{value}'. Valid columns are: {', '.join(valid_columns)}")
+
+        # Sort the books in the database
+        self.cursor.execute(f"SELECT Title, Author, Genre, Publish_Date FROM books ORDER BY {value} ASC")
+        sorted_books = self.cursor.fetchall()
+        # Clear the current Table
+        self.cursor.execute("DELETE FROM books")
+
+        # Reinsert sorted data into the table
+        for book in sorted_books:
+            self.cursor.execute('''
+            INSERT INTO books (Title, Author, Genre, Publish_Date)
+            VALUES (?, ?, ?, ?)
+            ''', book)
+        self.connection.commit()  # Commit the operation
+
+    # returns all data in table
+    def select_all_except_id(self):
+        """
+        Retrieves all rows from the books table excluding the id column.
+        Returns a list of tuples containing the values for Title, Author, Genre, and Publish_Date.
+        """
+        self.cursor.execute('SELECT Title, Author, Genre, Publish_Date FROM books')
+        result = self.cursor.fetchall()
+        return result
