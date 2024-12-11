@@ -8,10 +8,10 @@ load_dotenv()
 # Google Books API key
 api_key = os.getenv('GOOGLE_API_KEY')
 
-books_lists = []    # new line
 
 # Search book title
 def search_book(book_title):
+    books_lists = []
     query = book_title
 
     # URL to access Google Books API

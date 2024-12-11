@@ -502,9 +502,9 @@ def recommend_new_books():
             book_generate_result = generateBook(generated_genre)
 
             search_book_result = ' '.join(book_generate_result['author_name']) + ' ' +  book_generate_result['title']
-            print(search_book_result)
+            recomended_book = search_book(search_book_result)[0]
 
-            print(search_book(search_book_result)[0])
+            print(search_book_result, recomended_book)
 
 
 def open_book_generator_window():
